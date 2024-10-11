@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import FormField from "../Components/FormField";
 import { useNavigate } from "react-router-dom";
-import NavigationBar from "../Components/NavigationBar";
+import NavigationBar from "../Components/Utilities/NavigationBar";
 import { useDispatch } from "react-redux";
 import { addSubmission } from "../Features/Submission/submissionSlice";
 import { v4 as uuidv4 } from "uuid";

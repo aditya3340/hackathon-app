@@ -1,5 +1,5 @@
 import React from "react";
-import ai_planet_logo from "../assets/logo.png";
+import ai_planet_logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
 
 const NavigationBar = () => {

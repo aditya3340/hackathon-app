@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import hero_logo from "../assets/hero.png";
 import { Link } from "react-router-dom";
 import SplitScreen from "../Components/SplitScreen";
-import NavigationBar from "../Components/NavigationBar";
+import NavigationBar from "../Components/Utilities/NavigationBar.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import SubmissionDisplayComponent from "../Components/SubmissionDisplayComponent";
 import { fetchSubmissions } from "../Features/Submission/submissionSlice.js";
@@ -26,7 +26,7 @@ const LeftComponent = ({ title }) => {
   );
 };
 
-const RightComponent = ({ img }) => {
+export const RightComponent = ({ img }) => {
   return (
     <div className="hidden md:block flex items-center justify-center  p-2 px-6 mt-5 md:mx-10 ">
       <img className=" w-[80%] h-auto" src={img} alt="hero_logo" />
