@@ -1,17 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getIndividualSubmissionById } from "../Features/Submission/submissionSlice";
+import { fetchIndividualSubmission } from "../Features/Submission/submissionSlice";
+import SubmissionComponent from "../Components/SubmissionComponent";
 
 const IndividualSubmission = () => {
-  const params = useParams();
+  const { submissionId } = useParams();
 
-  const individualSubmission = useSelector((state) => state.submission.submissions.find((submission) => submission.id === params.submissionId))
+  const dispatch = useDispatch();
 
-  console.log(individualSubmission)
+  const { individualSubmission, isLoading, error } = useSelector(
+    (state) => state.submission
+  );
 
+  useEffect(() => {
+    dispatch(fetchIndividualSubmission(submissionId));
+  }, [dispatch]);
 
-  return <div>IndividualSubmission for object {params.submissionId}</div>;
+  if (isLoading) {
+    // FIXME:Add spinner
+    return <h1>Loading...</h1>;
+  }
+
+  if (error) {
+    return <h1>{error}</h1>;
+  }
+
+  return (
+    <>
+      {individualSubmission && (
+        <SubmissionComponent data={individualSubmission} />
+      )}
+    </>
+  );
 };
 
 export default IndividualSubmission;
