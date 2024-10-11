@@ -1,11 +1,12 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import hero_logo from "../assets/hero.png";
 import { Link } from "react-router-dom";
 import SplitScreen from "../Components/SplitScreen";
 import NavigationBar from "../Components/NavigationBar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import SubmissionDisplayComponent from "../Components/SubmissionDisplayComponent";
+import { fetchSubmissions } from "../Features/Submission/submissionSlice.js";
 
 const LeftComponent = ({ title }) => {
   return (
@@ -36,11 +37,16 @@ const RightComponent = ({ img }) => {
 const Home = () => {
   const [submissionToggler, setSubmissionToggler] = useState(true);
 
-  console.log(submissionToggler);
+  const dispatch = useDispatch();
+  const { submissions, loading, error } = useSelector(
+    (state) => state.submission
+  );
 
-  const data = useSelector((state) => state.submission.submissions);
-
-  // console.log(data);
+  // TODO: Integrate backend with Redux
+  useEffect(() => {
+    console.log("inside useEffect");
+    dispatch(fetchSubmissions());
+  }, [dispatch]);
 
   const toggleHandler = useCallback(
     (state) => {
@@ -48,6 +54,15 @@ const Home = () => {
     },
     [submissionToggler]
   );
+
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
+  if (error) {
+    return <h1>{error}</h1>;
+  }
+
+  console.log(submissions);
 
   return (
     <>
@@ -59,20 +74,24 @@ const Home = () => {
 
       <div className="flex max-w-[80%] m-auto mt-6">
         <button
-          className={`p-2 text-gray-500 font-semibold text-sm border-b-2 ${submissionToggler ? "border-white" : "border-slate-900"}`}
+          className={`p-2 text-gray-500 font-semibold text-sm border-b-2 ${
+            submissionToggler ? "border-white" : "border-slate-900"
+          }`}
           onClick={() => toggleHandler(true)}
         >
           All Submissions
         </button>
         <button
-          className={`p-2 text-gray-500 font-semibold text-sm border-b-2 ${submissionToggler ? "border-slate-900" : "border-white"}`}
+          className={`p-2 text-gray-500 font-semibold text-sm border-b-2 ${
+            submissionToggler ? "border-slate-900" : "border-white"
+          }`}
           onClick={() => toggleHandler(false)}
         >
           Favourite Submissions
         </button>
       </div>
 
-      <SubmissionDisplayComponent data={data} />
+      <SubmissionDisplayComponent data={submissions} />
     </>
   );
 };

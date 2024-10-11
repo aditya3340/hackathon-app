@@ -1,40 +1,29 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+
+// TODO:thunk function for api call
+export const fetchSubmissions = createAsyncThunk(
+  "/api/submissions",
+  async (_, thunkAPI) => {
+    try {
+      const response = await fetch("http://localhost:5000/api/submissions");
+      return response.json();
+    } catch (error) {
+      return thunkAPI.rejectWithValue("Failed to fetch submissions");
+    }
+  }
+);
 
 const initialState = {
-  submissions: [
-    {
-      id: 1,
-      title: "Submission 1",
-      description: "This is submission 1",
-      summary: "I am summary of the hackathon",
-      coverImage: "https://picsum.photos/200/300",
-      startDate: "2022-01-01",
-      endDate: "2024-04-04",
-      github_repository: "aditya3340@github.com",
-      isFavorite: false,
-      status: "pending",
-    },
-    {
-      id: 2,
-      title: "Submission 2",
-      description: "This is submission 2",
-      summary: "I am summary of the hackathon",
-      coverImage: "https://picsum.photos/200/301",
-      startDate: "2022-01-01",
-      endDate: "2024-04-04",
-      github_repository: "aditya3340@github.com",
-      isFavorite: false,
-      status: "pending",
-    },
-  ],
+  submissions: [],
+  loading: false,
+  error: null
 };
 
 const submissionSlice = createSlice({
   name: "submissions",
   initialState,
   reducers: {
-    //reducers for the submissions
-    //for actions like {addSubmission, removeSubmissionById, editSubmissionById}
     addSubmission: (state, action) => {
       state.submissions.push(action.payload);
     },
@@ -48,6 +37,21 @@ const submissionSlice = createSlice({
     removeSubmissionById: (state, action) => {},
     editSubmissionById: (state, action) => {},
   },
+  extraReducers: (builder) => {
+    builder
+    .addCase(fetchSubmissions.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(fetchSubmissions.fulfilled, (state, action) => {
+      state.loading = false;
+      state.submissions = action.payload;
+    })
+    .addCase(fetchSubmissions.rejected, (state, action) => {
+      state.loading = false;
+      state.error =  action.payload || "failed to fetch submissions";
+    })
+  }
 });
 
 export const {

@@ -38,7 +38,9 @@ const SubmissionForm = () => {
     if (file && file.length > 0) {
       const selectedFile = file[0];
 
-      //check if the file size is less than 2MB ?
+      //compress function
+
+      //check if the file size is less than 10kb ?
       const maxSizeInBytes = 2 * 1024 * 1024;
 
       if (selectedFile.size < maxSizeInBytes) {
@@ -77,17 +79,17 @@ const SubmissionForm = () => {
       coverImage: imagePreview, // File object included in the form data
     };
 
-    // try {
-    //   const response = await fetch("http://localhost:5000/api/submissions", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(formData),
-    //   });
-    // } catch (e) {
-    //   console.error(e);
-    // }
+    try {
+      const response = await fetch("http://localhost:5000/api/submissions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+    } catch (e) {
+      console.error(e);
+    }
 
     console.log("Form Data Submitted:", JSON.stringify(formData));
     // API call to submit the form data
